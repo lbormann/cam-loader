@@ -21,4 +21,9 @@ Download the appropiate file for your os in the release section.
 ### Done
 - Initial functionality
 
-                         
+
+## Resources
+
+Icon by <a href="https://icon-icons.com/de/symbol/webcam/30393"></a> on <a href="https://icon-icons.com">icon-icons.com</a>
+License <a href="https://creativecommons.org/licenses/by/4.0/">Attribution 4.0 International (CC BY 4.0)</a>                         
+   

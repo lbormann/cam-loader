@@ -11,7 +11,6 @@ namespace CamLoader
 {
     public partial class Form1 : Form
     {
-        // Importieren Sie die benötigten Funktionen
         [DllImport("olepro32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         private static extern int OleCreatePropertyFrame(IntPtr hwndOwner, int x, int y,
             string lpszCaption, int cObjects, [In, MarshalAs(UnmanagedType.Interface)] ref object ppUnk,
@@ -42,15 +41,14 @@ namespace CamLoader
             CameraComboBox.DataSource = Cameras;
             CameraComboBox.DisplayMember = "Name";
 
-            // NotifyIcon erstellen
+
             notifyIcon1 = new NotifyIcon
             {
-                Icon = SystemIcons.Application,
+                Icon = Icon,
                 Visible = false,
                 Text = Text
             };
 
-            // ContextMenuStrip erstellen
             contextMenuStrip1 = new ContextMenuStrip();
             var openMenuItem = new ToolStripMenuItem("Open", null, OnOpenMenuItemClick);
             var exitMenuItem = new ToolStripMenuItem("Exit", null, OnExitMenuItemClick);
@@ -60,6 +58,8 @@ namespace CamLoader
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
             notifyIcon1.DoubleClick += NotifyIcon_DoubleClick;
         }
+
+
 
         private void Form1_Shown(object sender, EventArgs e)
         {
@@ -188,7 +188,7 @@ namespace CamLoader
             IPin pPin = null;
             pPin = DsFindPin.ByCategory(cameraFilter, PinCategory.Capture, 0);
 
-            IAMStreamConfig streamConfig = pPin as IAMStreamConfig;
+            var streamConfig = pPin as IAMStreamConfig;
             AMMediaType mediaType = null;
             streamConfig.GetFormat(out mediaType);
 
@@ -246,7 +246,6 @@ namespace CamLoader
                 VideoStream = (IMediaControl)graphBuilder;
                 VideoStream.Run();
 
-
                 // Zeige den Standard-Kameradialog zum Einstellen der Eigenschaften an
                 IAMCameraControl cameraControl = baseFilter as IAMCameraControl;
                 ISpecifyPropertyPages propertyPages = baseFilter as ISpecifyPropertyPages;
@@ -284,13 +283,9 @@ namespace CamLoader
             cameraDevice.Mon.BindToObject(null, null, ref baseFilterGuid, out object filterObject);
             cameraFilter = (IBaseFilter)filterObject;
 
-            // Zugriff auf die IAMCameraControl-Schnittstelle
             var cameraControl = cameraFilter as IAMCameraControl;
-            // Zugriff auf die IAMVideoProcAmp-Schnittstelle
             var videoProcAmp = cameraFilter as IAMVideoProcAmp;
 
-
-            // Extrahiere VendorID und ProductID
             var (vendorID, productID) = ExtractVendorAndProductID(cameraDevice.DevicePath);
             var currentSettings = new CameraSettings
             {
@@ -302,11 +297,11 @@ namespace CamLoader
 
             if (cameraControl != null)
             {
-                foreach (DirectShowLib.CameraControlProperty property in Enum.GetValues(typeof(DirectShowLib.CameraControlProperty)))
+                foreach (CameraControlProperty property in Enum.GetValues(typeof(CameraControlProperty)))
                 {
-                    int hr = cameraControl.GetRange(property, out int minValue, out int maxValue, out int step, out int defaultValue, out DirectShowLib.CameraControlFlags flags);
+                    int hr = cameraControl.GetRange(property, out int minValue, out int maxValue, out int step, out int defaultValue, out CameraControlFlags flags);
 
-                    if (hr == 0) // Erfolgreich
+                    if (hr == 0)
                     {
                         cameraControl.Get(property, out int currentValue, out flags);
                         currentSettings.CameraControlProperties.Add(new CameraControlPropertyValue
@@ -329,7 +324,7 @@ namespace CamLoader
                 {
                     int hr = videoProcAmp.GetRange(property, out int minValue, out int maxValue, out int step, out int defaultValue, out VideoProcAmpFlags flags);
 
-                    if (hr == 0) // Erfolgreich
+                    if (hr == 0)
                     {
                         videoProcAmp.Get(property, out int currentValue, out flags);
                         currentSettings.VideoProcAmpProperties.Add(new VideoProcAmpPropertyValue
@@ -392,9 +387,7 @@ namespace CamLoader
             cameraDevice.Mon.BindToObject(null, null, ref baseFilterGuid, out object filterObject);
             cameraFilter = (IBaseFilter)filterObject;
 
-            // Zugriff auf die IAMCameraControl-Schnittstelle
             var cameraControl = cameraFilter as IAMCameraControl;
-            // Zugriff auf die IAMVideoProcAmp-Schnittstelle
             var videoProcAmp = cameraFilter as IAMVideoProcAmp;
 
             if (cameraControl != null)

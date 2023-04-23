@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             CameraComboBox = new ComboBox();
             PictureBoxCamera = new PictureBox();
             ButtonSettings = new Button();
@@ -105,9 +106,10 @@
             Controls.Add(CameraComboBox);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
+            MinimizeBox = false;
             Name = "Form1";
-            ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "CamLoader";
             Shown += Form1_Shown;
