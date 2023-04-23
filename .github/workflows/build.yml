@@ -1,0 +1,46 @@
+name: "Build"
+
+on:
+  push:
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    # branches:
+    #   - master
+
+env:
+    PROJECT_PATH: CamLoader/CamLoader.csproj
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - run: dotnet build ${{ env.PROJECT_PATH }} -c Release -r win-x86 -p:PublishSingleFile=true --no-restore
+
+      - run: dotnet publish ${{ env.PROJECT_PATH }} -c Release -r win-x86 -p:PublishSingleFile=true --no-build
+
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+
+      - uses: vimtor/action-zip@v1
+        with:
+          files: CamLoader/bin/Release/net6.0-windows10.0.22621.0/win-x86/publish/
+          dest: cam-loader.zip
+
+      - uses: csexton/release-asset-action@v2
+        with:
+          file: cam-loader.zip
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ steps.create_release.outputs.upload_url }}
