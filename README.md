@@ -13,15 +13,6 @@ The program creates a settings file for the selected camera, which is automatica
 Download the appropiate file for your os in the release section.
 
 
-## TODOs
-
-- add icon
-- add single-camera-configuration possibility
-
-### Done
-- Initial functionality
-
-
 ## Resources
 
 Icon by <a href="https://icon-icons.com/de/symbol/webcam/30393"></a> on <a href="https://icon-icons.com">icon-icons.com</a>

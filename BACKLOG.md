@@ -1,0 +1,3 @@
+- add icon
+- add single-camera-configuration possibility
+- add license
